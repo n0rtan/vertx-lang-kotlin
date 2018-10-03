@@ -5,20 +5,16 @@ import io.vertx.core.Context
 import io.vertx.core.Future
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
+import io.vertx.core.impl.VertxInternal
 import io.vertx.core.streams.ReadStream
 import io.vertx.core.streams.WriteStream
-import kotlinx.coroutines.experimental.CancellableContinuation
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.Runnable
-import kotlinx.coroutines.experimental.asCoroutineDispatcher
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.channels.ArrayChannel
 import kotlinx.coroutines.experimental.channels.ChannelIterator
 import kotlinx.coroutines.experimental.channels.Closed
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.SendChannel
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.selects.SelectClause1
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import java.util.concurrent.AbstractExecutorService
 import java.util.concurrent.Callable
 import java.util.concurrent.Delayed
@@ -333,6 +329,10 @@ private class ChannelWriteStream<T>(val context: Context,
       false
     }
   }
+}
+
+fun Vertx.workerDispatcher(): CoroutineDispatcher {
+  return (this as VertxInternal).workerPool.asCoroutineDispatcher()
 }
 
 /**
